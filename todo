@@ -1,0 +1,18 @@
+#!/bin/sh
+case $1 in 
+	new)
+		ID=$(cat /.todo/id.txt)
+		ID=$(($ID+1))
+		echo $ID >/.todo/id.txt
+		echo $ID $2 >> /.todo/todo.txt
+		echo "task added sucessfuly";;
+	list) echo $(cat /.todo/todo.txt);;
+	done)
+		myarray=$(echo $2 | tr ',' ' ')
+		for word in $myarray 
+		do
+		sed "/\<$word\>/d" /.todo/todo.txt | sponge  /.todo/todo.txt
+	done
+			;;
+esac
+
