@@ -1,0 +1,19 @@
+#!/bin/bash
+source /todo/.todorc
+case $1 in 
+	new)
+		ID=$(cat id.txt)
+		ID=$(($ID+1))
+		echo $ID >id.txt
+		echo $ID $2 >> todo.txt
+		echo "task added sucessfuly";;
+	list) echo $(cat todo.txt);;
+	done)
+		myarray=$(echo $2 | tr ',' ' ')
+		for word in $myarray 
+		do
+		sed "/\<$word\>/d" todo.txt | todo.txt
+	done
+			;;
+esac
+
