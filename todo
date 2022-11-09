@@ -1,11 +1,18 @@
 #!/bin/bash
-source $HOME/.todorc
+sudo mkdir -p $HOME/.todo
+sudo chmod 777 $HOME/.todo
+source $HOME/.todorc 2>$HOME/.todo/errors.txt
+
 
 TODO_PATH="${TODO_PATH:=$HOME/.todo}"
 add_task(){
-
-	temp=$(cat $TODO_PATH/id.txt)
-	ID="${temp:=1}"
+	if [ -z "$1" ]
+  	then
+		echo bad insert;
+		exit 0
+	fi
+	temp=$(cat $TODO_PATH/id.txt 2>>$HOME/.todo/errors.txt)
+	ID="${temp:=0}"
 	ID=$(($ID+1))
 	echo $ID >$TODO_PATH/id.txt
 	echo $ID $1 >> $TODO_PATH/todo.txt 
@@ -15,11 +22,11 @@ add_task(){
 list_task(){
 	case $1 in
 		# Handle the case when the user adds both of the option -- done
-		-a|--all)echo $(cat $TODO_PATH/todo.txt) ;;
-		-d|--done)echo $(cat $TODO_PATH/done.txt);;
-		"")echo $(cat $TODO_PATH/todo.txt)
-			echo $(cat $TODO_PATH/done.txt);;
-		*) echo bad insert ;      
+		-a|--all)echo $(cat $TODO_PATH/todo.txt 2>>$HOME/.todo/errors.txt) ;;
+		-d|--done)echo $(cat $TODO_PATH/done.txt 2>> $HOME/.todo/errors.txt);;
+		"")echo $(cat $TODO_PATH/todo.txt 2>>$HOME/.todo/errors.txt)
+			echo $(cat $TODO_PATH/done.txt 2>>$HOME/.todo/errors.txt);;
+		*) echo bad insert ;;      
 	esac
 }
 
@@ -28,7 +35,7 @@ done_tasks(){
 	for word in $id_list
 	do
 		grep "^\<$word\>" $TODO_PATH/todo.txt >> $TODO_PATH/done.txt
-		sed "/^\<$word\>/d" $TODO_PATH/todo.txt | sponge $TODO_PATH/todo.txt					
+		sed -i "/^\<$word\>/d" $TODO_PATH/todo.txt >>  $TODO_PATH/todo.txt					
 	done
 }
 
